@@ -19,10 +19,13 @@ export const getOne = async (req, res) => {
     PostModel.findOneAndUpdate(
       { _id: postId },
       { $inc: { viewsCount: 1 } },
-      { returnDocument: "after" },
-      (err, doc) => {
+      { returnDocument: "after" }
+    )
+      .populate("user")
+      .exec()
+      .then((doc, err) => {
         if (err) {
-          console.warn(error);
+          console.warn(err);
           return res.status(500).json({
             message: "Не удалось получить статью",
           });
@@ -35,13 +38,11 @@ export const getOne = async (req, res) => {
         }
 
         res.json(doc);
-      }
-    );
-    res.json(posts);
-  } catch (error) {
-    console.warn(error);
+      });
+  } catch (err) {
+    console.warn(err);
     res.status(500).json({
-      message: "Не удалось получить статью",
+      message: "Ошибка при загрузке статьи",
     });
   }
 };
@@ -63,6 +64,60 @@ export const create = async (req, res) => {
     console.warn(error);
     res.status(500).json({
       message: "Не удалось создать статью",
+    });
+  }
+};
+
+export const remove = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    PostModel.findOneAndDelete({ _id: postId }).then((doc, err) => {
+      if (err) {
+        console.warn(err);
+        return res.status(500).json({
+          message: "Не удалось удалить статью",
+        });
+      }
+
+      if (!doc) {
+        return res.status(404).json({
+          message: "Статья не найдена",
+        });
+      }
+
+      res.json({ success: true });
+    });
+  } catch (err) {
+    console.warn(err);
+    res.status(500).json({
+      message: "Ошибка при удалении статьи",
+    });
+  }
+};
+
+export const update = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    const doc = PostModel.updateOne(
+      { _id: postId },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        imageUrl: req.body.imageUrl,
+        tags: req.body.tags,
+        user: req.userId,
+      }
+    );
+
+    const post = await doc._update;
+
+    res.json(post);
+  } catch (err) {
+    console.warn(err);
+    res.status(500).json({
+      message: "Ошибка при обновлении статьи",
     });
   }
 };
