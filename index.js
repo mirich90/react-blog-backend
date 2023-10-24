@@ -1,11 +1,15 @@
 import express from "express";
 import mongoose from "mongoose";
-import { registerValidation, loginValidation } from "./validations/auth.js";
-import { postCreateValidation } from "./validations/post.js";
-import checkAuth from "./utils/checkAuth.js";
-import * as UserController from "./controllers/UserController.js";
-import * as PostController from "./controllers/PostController.js";
 import multer from "multer";
+import cors from "cors";
+
+import {
+  postCreateValidation,
+  registerValidation,
+  loginValidation,
+} from "./validations/index.js";
+import { UserController, PostController } from "./controllers/index.js";
+import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
 mongoose
   .connect(
@@ -31,12 +35,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 app.use(express.json());
-
+app.use(cors());
 app.use("/uploads", express.static("uploads"));
 
-app.post("/auth/login", loginValidation, UserController.login);
+app.post(
+  "/auth/login",
+  loginValidation,
+  handleValidationErrors,
+  UserController.login
+);
 app.get("/auth/me", checkAuth, UserController.getMe);
-app.post("/auth/register", registerValidation, UserController.register);
+app.post(
+  "/auth/register",
+  registerValidation,
+  handleValidationErrors,
+  UserController.register
+);
 
 app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
   res.json({
@@ -46,9 +60,21 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 
 app.get("/posts", PostController.getAll);
 app.get("/posts/:id", PostController.getOne);
-app.post("/posts", checkAuth, postCreateValidation, PostController.create);
+app.post(
+  "/posts",
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  PostController.create
+);
 app.delete("/posts/:id", checkAuth, PostController.remove);
-app.patch("/posts/:id", checkAuth, PostController.update);
+app.patch(
+  "/posts/:id",
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  PostController.update
+);
 
 app.listen(4444, (err) => {
   if (err) {
