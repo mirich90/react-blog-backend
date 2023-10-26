@@ -11,6 +11,6 @@ export const postCreateValidation = [
       min: 20,
     })
     .isString(),
-  body("tags", "Неверный формат тегов (укажите массив)").optional().isString(),
-  body("imageUrl", "Некорректная ссылка на изображение").optional().isURL(),
+  body("tags", "Неверный формат тегов (укажите массив)").optional().isArray(),
+  body("imageUrl", "Некорректная ссылка на изображение").optional().isString(),
 ];

@@ -2,7 +2,9 @@ import PostModel from "../models/Post.js";
 
 export const getAll = async (req, res) => {
   try {
-    const posts = await PostModel.find().populate("user").exec();
+    const posts = await PostModel.find()
+      .populate({ path: "user", select: ["name", "avatarUrl"] })
+      .exec();
     res.json(posts);
   } catch (error) {
     console.warn(error);
@@ -38,7 +40,7 @@ export const getOne = async (req, res) => {
       { $inc: { viewsCount: 1 } },
       { returnDocument: "after" }
     )
-      .populate("user")
+      .populate({ path: "user", select: ["name", "avatarUrl"] })
       .exec()
       .then((doc, err) => {
         if (err) {
