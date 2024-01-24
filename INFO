@@ -13,5 +13,7 @@ mongodb+srv://admin:<password>@cluster0.lpjz9v9.mongodb.net/?retryWrites=true&w=
     "mongodb": "4.1",
     "mongoose": "^7.6.3",
     "nodemon": "^3.0.1"
+
     
+
 до 1:57:30 https://www.youtube.com/watch?v=GQ_pTmcXNrQ&t=15031s

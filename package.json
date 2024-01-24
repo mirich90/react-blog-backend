@@ -2,7 +2,7 @@
   "name": "react-blog",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index2.js",
   "type": "module",
   "scripts": {
     "start1": "node index.js",

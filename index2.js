@@ -13,8 +13,7 @@ import { handleValidationErrors, checkAuth } from "./utils/index.js";
 
 mongoose
   .connect(
-    "mongodb+srv://admin:qweqwe@cluster0.lpjz9v9.mongodb.net/blog?retryWrites=true&w=majority"
-    // "mongodb://admin:qweqwe@ac-umsijro-shard-00-00.lpjz9v9.mongodb.net:27017,ac-umsijro-shard-00-01.lpjz9v9.mongodb.net:27017,ac-umsijro-shard-00-02.lpjz9v9.mongodb.net:27017/?ssl=true&replicaSet=atlas-10rbb6-shard-0&authSource=admin&retryWrites=true&w=majority"
+    "mongodb+srv://admin:***@cluster0.***.mongodb.net/blog?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("DB connect");
